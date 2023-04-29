@@ -66,153 +66,155 @@ class _EditUserInformationScreenState extends State<EditUserInformationScreen> {
       ),
       body: Stack(
         children: [
-          Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Email: '),
-                    Text(
-                      '${user!.email}',
-                    ),
-                    const Text(''),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('User name: '),
-                    Text(
-                      user!.displayName != null ? '$userName' : 'NO NAME',
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        changeUserName();
-                      },
-                      icon: const Icon(Icons.edit),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text('User avatar: '),
-                  ],
-                ),
-              ),
-              Container(
-                height: 380,
-                margin: const EdgeInsets.only(left: 10, right: 10),
-                padding: const EdgeInsets.only(right: 20, left: 20),
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: SizedBox(
-                        height: 280,
-                        width: 300,
-                        child: _image == null
-                            ? CircleAvatar(
-                                backgroundImage: user!.photoURL == null
-                                    ? NetworkImage(anonymousImage)
-                                    : NetworkImage('${user!.photoURL}'),
-                              )
-                            : CircleAvatar(
-                                backgroundImage: FileImage(_image!),
-                              ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Email: '),
+                      Text(
+                        '${user!.email}',
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 78),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.grey,
-                        ),
-                        height: 50,
-                        width: 50,
-                        child: IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            _showSelectPhotoOptions(context);
-                          },
+                      const Text(''),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('User name: '),
+                      Text(
+                        user!.displayName != null ? '$userName' : 'NO NAME',
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          changeUserName();
+                        },
+                        icon: const Icon(Icons.edit),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text('User avatar: '),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 380,
+                  margin: const EdgeInsets.only(left: 10, right: 10),
+                  padding: const EdgeInsets.only(right: 20, left: 20),
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: SizedBox(
+                          height: 280,
+                          width: 300,
+                          child: _image == null
+                              ? CircleAvatar(
+                                  backgroundImage: user!.photoURL == null
+                                      ? NetworkImage(anonymousImage)
+                                      : NetworkImage('${user!.photoURL}'),
+                                )
+                              : CircleAvatar(
+                                  backgroundImage: FileImage(_image!),
+                                ),
                         ),
                       ),
-                    ),
-                    Visibility(
-                      visible: _image != null,
-                      child: Align(
+                      Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
-                          margin: const EdgeInsets.only(bottom: 20),
+                          margin: const EdgeInsets.only(bottom: 78),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.grey,
+                          ),
                           height: 50,
-                          width: 200,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                            ),
-                            onPressed: () async {
-                              setState(() {
-                                loading = true;
-                              });
-
-                              if (user!.photoURL != null) {
-                                await FirebaseStorage.instance
-                                    .refFromURL('${user!.photoURL}')
-                                    .delete();
-                              }
-
-                              String uniqueFileName = DateTime.now()
-                                  .millisecondsSinceEpoch
-                                  .toString();
-                              Reference referenceRoot =
-                                  FirebaseStorage.instance.ref();
-                              Reference referenceDirImages =
-                                  referenceRoot.child('avatar');
-                              Reference referenceImageToUpload =
-                                  referenceDirImages.child(uniqueFileName);
-
-                              try {
-                                await referenceImageToUpload
-                                    .putFile(File(_image!.path));
-                                imageUrl = await referenceImageToUpload
-                                    .getDownloadURL();
-                              } catch (e) {
-                                print(e);
-                              }
-
-                              print(imageUrl);
-
-                              try {
-                                user!.updatePhotoURL(imageUrl);
-                              } catch (error) {
-                                print(error);
-                              }
-
-                              Timer(const Duration(seconds: 2), () {
-                                setState(() {
-                                  loading = false;
-                                });
-                              });
+                          width: 50,
+                          child: IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              _showSelectPhotoOptions(context);
                             },
-                            child: const Text('Update avatar'),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      Visibility(
+                        visible: _image != null,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 20),
+                            height: 50,
+                            width: 200,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                              ),
+                              onPressed: () async {
+                                setState(() {
+                                  loading = true;
+                                });
+
+                                if (user!.photoURL != null) {
+                                  await FirebaseStorage.instance
+                                      .refFromURL('${user!.photoURL}')
+                                      .delete();
+                                }
+
+                                String uniqueFileName = DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString();
+                                Reference referenceRoot =
+                                    FirebaseStorage.instance.ref();
+                                Reference referenceDirImages =
+                                    referenceRoot.child('avatar');
+                                Reference referenceImageToUpload =
+                                    referenceDirImages.child(uniqueFileName);
+
+                                try {
+                                  await referenceImageToUpload
+                                      .putFile(File(_image!.path));
+                                  imageUrl = await referenceImageToUpload
+                                      .getDownloadURL();
+                                } catch (e) {
+                                  print(e);
+                                }
+
+                                print(imageUrl);
+
+                                try {
+                                  user!.updatePhotoURL(imageUrl);
+                                } catch (error) {
+                                  print(error);
+                                }
+
+                                Timer(const Duration(seconds: 2), () {
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                });
+                              },
+                              child: const Text('Update avatar'),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Visibility(
             visible: loading,

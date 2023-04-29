@@ -32,22 +32,20 @@ dependencies:
   image_picker: ^0.8.7
   http: ^0.13.5
   flutter_svg: ^2.0.1
-  flutter_native_splash: ^2.2.18
   flutter_colorpicker: ^1.0.3
   flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+  flutter_lints: ^1.0.4
 
 flutter_icons:
   android: true
   ios: true
   image_path: "assets/logo.png"
   # adaptive_icon_foreground: "assets/foreground.png"
-
-  flutter_lints: ^1.0.4
-
 
 flutter:
   uses-material-design: true

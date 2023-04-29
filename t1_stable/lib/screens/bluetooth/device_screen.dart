@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_blue_plus_example/screens/bluetooth/find_device_screen.dart';
@@ -30,7 +32,12 @@ class _DeviceScreenState extends State<DeviceScreen> {
   }
 
   Widget _buildServiceTiles(
-      BluetoothService services, int red, int green, int blue) {
+    BluetoothService services,
+    int red,
+    int green,
+    int blue,
+    int animationInt,
+  ) {
     return SizedBox(
       width: 200,
       height: 50,
@@ -40,9 +47,10 @@ class _DeviceScreenState extends State<DeviceScreen> {
         ),
         child: const Text('SUBMIT'),
         onPressed: () async {
-          print('${myColor.red} ${myColor.green} ${myColor.blue}');
+          print(
+              '${myColor.red} ${myColor.green} ${myColor.blue} $animationInt');
           services.characteristics[0].write(
-            [red, green, blue],
+            [red, green, blue, animationInt],
             withoutResponse: true,
           );
         },
@@ -52,6 +60,11 @@ class _DeviceScreenState extends State<DeviceScreen> {
 
   bool isDiscovered = true;
   Color myColor = Colors.blue;
+  int animationInt = 0;
+
+  //for animation
+  int colorIndex = 0;
+  bool animationOn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +114,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
         index: snapshot.data! ? 1 : 0,
         children: [
           TextButton(
-            child: const Text("REFRESH"),
+            child: const Text("REFRESH DEVICE"),
             onPressed: () {
               print('REFRESH');
               widget.device.discoverServices();
@@ -175,7 +188,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
           child: Column(
             children: [
               SizedBox(
-                height: screenHeight * 0.08,
+                height: screenHeight * 0.06,
                 child: StreamBuilder<BluetoothDeviceState>(
                   stream: widget.device.state,
                   initialData: BluetoothDeviceState.connecting,
@@ -204,19 +217,98 @@ class _DeviceScreenState extends State<DeviceScreen> {
                 ),
               ),
               SizedBox(
-                height: screenHeight * 0.7,
+                height: screenHeight * 0.82,
                 width: double.infinity,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  // mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     SizedBox(
-                      height: 500,
+                      height: 438,
                       child: ColorPicker(
                         enableAlpha: false,
                         pickerColor: myColor,
                         onColorChanged: (color) => setState(() {
                           myColor = color;
                         }),
+                      ),
+                    ),
+                    Container(
+                      height: 210,
+                      margin: const EdgeInsets.only(bottom: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 150,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (animationInt == 0)
+                                  ColorFiltered(
+                                    colorFilter: ColorFilter.mode(
+                                      myColor,
+                                      BlendMode.modulate,
+                                    ),
+                                    child: Image.asset(
+                                      'assets/images/slide animation.gif',
+                                    ),
+                                  ),
+                                if (animationInt == 1)
+                                  ColorFiltered(
+                                    colorFilter: ColorFilter.mode(
+                                      myColor,
+                                      BlendMode.modulate,
+                                    ),
+                                    child: Image.asset(
+                                      'assets/images/blink animation.gif',
+                                    ),
+                                  ),
+                                if (animationInt == 2)
+                                  ColorFiltered(
+                                    colorFilter: ColorFilter.mode(
+                                      myColor,
+                                      BlendMode.modulate,
+                                    ),
+                                    child: Image.asset(
+                                      'assets/images/accumulate animation.gif',
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              animationButton(
+                                //slide
+                                animaInt: 0,
+                                image: Image.asset(
+                                  'assets/images/slide.png',
+                                  width: 40,
+                                  height: 40,
+                                ),
+                              ),
+                              animationButton(
+                                //blink
+                                animaInt: 1,
+                                image: Image.asset(
+                                  'assets/images/blink.png',
+                                  width: 40,
+                                  height: 40,
+                                ),
+                              ),
+                              animationButton(
+                                //accumulate
+                                animaInt: 2,
+                                image: Image.asset(
+                                  'assets/images/accumulate.png',
+                                  width: 40,
+                                  height: 40,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                     StreamBuilder<List<BluetoothService>>(
@@ -233,6 +325,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
                             myColor.red,
                             myColor.green,
                             myColor.blue,
+                            animationInt,
                           );
                         }
                       },
@@ -245,5 +338,112 @@ class _DeviceScreenState extends State<DeviceScreen> {
         ),
       ),
     );
+  }
+
+  Widget animationButton({
+    required int animaInt,
+    required Image image,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(right: 10, left: 10, top: 5),
+      height: 50,
+      width: animationInt == animaInt ? 100 : 70,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          backgroundColor: animationInt == animaInt
+              ? const Color.fromARGB(255, 36, 141, 39)
+              : Colors.grey,
+        ),
+        onPressed: () {
+          setState(() {
+            animationInt = animaInt;
+            // animationOn = true;
+            if (animationInt == 1) {
+              allBlink = true;
+            } else {
+              allBlink = false;
+            }
+          });
+          // animationTurningOn();
+        },
+        child: image,
+      ),
+    );
+  }
+
+  bool allBlink = false;
+  Widget animationWidget({
+    required int animationIndex,
+  }) {
+    return Container(
+      height: 100,
+      width: 20,
+      decoration: BoxDecoration(
+        color:
+            colorIndex == animationIndex || allBlink ? myColor : Colors.white,
+        border: Border.all(),
+      ),
+    );
+  }
+
+  int counter = 0;
+  int limitCounter = 7;
+  void animationTurningOn() {
+    Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      // slide animation
+      if (animationInt == 0) {
+        setState(() {
+          colorIndex++;
+          print(colorIndex);
+        });
+        if (colorIndex > 7) {
+          colorIndex = 0;
+          setState(() {
+            // animationOn = false;
+            counter++;
+          });
+          if (counter == 3) {
+            counter = 0;
+            colorIndex = 0;
+            timer.cancel();
+          }
+        }
+      }
+      // blink animation
+      if (animationInt == 1) {
+        setState(() {
+          allBlink = !allBlink;
+          counter++;
+        });
+        if (counter == 20) {
+          counter = 0;
+          allBlink = false;
+          timer.cancel();
+        }
+      }
+      // accumulate animation
+      if (animationInt == 2) {
+        setState(() {
+          colorIndex++;
+          print(colorIndex);
+        });
+        if (colorIndex > limitCounter) {
+          colorIndex = 0;
+          limitCounter -= limitCounter;
+          setState(() {
+            // animationOn = false;
+            counter++;
+          });
+          if (counter == 3) {
+            counter = 0;
+            colorIndex = 0;
+            timer.cancel();
+          }
+        }
+      }
+    });
   }
 }
