@@ -14,6 +14,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'dart:math' show cos, sqrt, asin;
 
+import 'package:wakelock/wakelock.dart';
+
 class MyMapScreen extends StatefulWidget {
   const MyMapScreen({Key? key}) : super(key: key);
 
@@ -65,7 +67,7 @@ class _MyMapScreenState extends State<MyMapScreen> {
       appBar: AppBar(
         backgroundColor: Colors.green,
         title: const Text(
-          'My Map',
+          'New record',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -261,6 +263,7 @@ class _MyMapScreenState extends State<MyMapScreen> {
                       ),
                 color: isTracking ? Colors.red : Colors.green,
                 onPressed: () async {
+                  Wakelock.enable();
                   !isTracking
                       ? {
                           _getCurrentLocationHandler(),
@@ -488,6 +491,8 @@ class _MyMapScreenState extends State<MyMapScreen> {
               child: const Text('YES'),
               onPressed: () async {
                 setState(() {
+                  Wakelock.disable();
+                  
                   // Close dialog
                   Navigator.of(context).pop();
 

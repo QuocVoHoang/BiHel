@@ -167,7 +167,9 @@ class _RecordScreenState extends State<RecordScreen> {
                         );
                       });
                 } else {
-                  return const CircularProgressIndicator();
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
               },
             ),
