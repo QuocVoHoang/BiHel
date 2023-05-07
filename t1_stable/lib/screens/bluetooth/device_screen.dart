@@ -273,6 +273,16 @@ class _DeviceScreenState extends State<DeviceScreen> {
                                       'assets/images/accumulate animation.gif',
                                     ),
                                   ),
+                                if (animationInt == 3)
+                                  ColorFiltered(
+                                    colorFilter: ColorFilter.mode(
+                                      myColor,
+                                      BlendMode.modulate,
+                                    ),
+                                    child: Image.asset(
+                                      'assets/images/parallel animation.gif',
+                                    ),
+                                  ),
                               ],
                             ),
                           ),
@@ -283,7 +293,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
                                 //slide
                                 animaInt: 0,
                                 image: Image.asset(
-                                  'assets/images/slide.png',
+                                  'assets/images/slide animation.gif',
                                   width: 40,
                                   height: 40,
                                 ),
@@ -292,7 +302,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
                                 //blink
                                 animaInt: 1,
                                 image: Image.asset(
-                                  'assets/images/blink.png',
+                                  'assets/images/blink animation.gif',
                                   width: 40,
                                   height: 40,
                                 ),
@@ -301,7 +311,16 @@ class _DeviceScreenState extends State<DeviceScreen> {
                                 //accumulate
                                 animaInt: 2,
                                 image: Image.asset(
-                                  'assets/images/accumulate.png',
+                                  'assets/images/accumulate animation.gif',
+                                  width: 40,
+                                  height: 40,
+                                ),
+                              ),
+                              animationButton(
+                                //parallel
+                                animaInt: 3,
+                                image: Image.asset(
+                                  'assets/images/parallel animation.gif',
                                   width: 40,
                                   height: 40,
                                 ),
@@ -360,90 +379,11 @@ class _DeviceScreenState extends State<DeviceScreen> {
         onPressed: () {
           setState(() {
             animationInt = animaInt;
-            // animationOn = true;
-            if (animationInt == 1) {
-              allBlink = true;
-            } else {
-              allBlink = false;
-            }
           });
-          // animationTurningOn();
         },
         child: image,
       ),
     );
   }
 
-  bool allBlink = false;
-  Widget animationWidget({
-    required int animationIndex,
-  }) {
-    return Container(
-      height: 100,
-      width: 20,
-      decoration: BoxDecoration(
-        color:
-            colorIndex == animationIndex || allBlink ? myColor : Colors.white,
-        border: Border.all(),
-      ),
-    );
-  }
-
-  int counter = 0;
-  int limitCounter = 7;
-  void animationTurningOn() {
-    Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      // slide animation
-      if (animationInt == 0) {
-        setState(() {
-          colorIndex++;
-          print(colorIndex);
-        });
-        if (colorIndex > 7) {
-          colorIndex = 0;
-          setState(() {
-            // animationOn = false;
-            counter++;
-          });
-          if (counter == 3) {
-            counter = 0;
-            colorIndex = 0;
-            timer.cancel();
-          }
-        }
-      }
-      // blink animation
-      if (animationInt == 1) {
-        setState(() {
-          allBlink = !allBlink;
-          counter++;
-        });
-        if (counter == 20) {
-          counter = 0;
-          allBlink = false;
-          timer.cancel();
-        }
-      }
-      // accumulate animation
-      if (animationInt == 2) {
-        setState(() {
-          colorIndex++;
-          print(colorIndex);
-        });
-        if (colorIndex > limitCounter) {
-          colorIndex = 0;
-          limitCounter -= limitCounter;
-          setState(() {
-            // animationOn = false;
-            counter++;
-          });
-          if (counter == 3) {
-            counter = 0;
-            colorIndex = 0;
-            timer.cancel();
-          }
-        }
-      }
-    });
-  }
 }
