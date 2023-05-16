@@ -288,10 +288,10 @@ class _RecordScreenState extends State<RecordScreen> {
               height: 80,
               width: 120,
               child: InkWell(
-                child: Center(
+                child: const Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.delete),
                       Text(
                         'DELETE',

@@ -102,9 +102,9 @@ class _EditUserInformationScreenState extends State<EditUserInformationScreen> {
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       Text('User avatar: '),
                     ],
                   ),

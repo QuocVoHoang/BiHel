@@ -48,10 +48,12 @@ class _DeviceScreenState extends State<DeviceScreen> {
         child: const Text('SUBMIT'),
         onPressed: () async {
           print(
-              '${myColor.red} ${myColor.green} ${myColor.blue} $animationInt');
-          services.characteristics[0].write(
+            '${myColor.red} ${myColor.green} ${myColor.blue} $animationInt',
+          );
+
+          await services.characteristics[0].write(
             [red, green, blue, animationInt],
-            withoutResponse: true,
+            withoutResponse: false,
           );
         },
       ),
@@ -385,5 +387,4 @@ class _DeviceScreenState extends State<DeviceScreen> {
       ),
     );
   }
-
 }

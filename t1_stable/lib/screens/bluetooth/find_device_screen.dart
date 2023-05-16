@@ -116,9 +116,9 @@ class FindDevicesScreen extends StatelessWidget {
                       ),
                       width: 220,
                       height: 56,
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
+                        children: [
                           Text('Turn off bluetooth'),
                           Icon(Icons.bluetooth_disabled),
                         ],

@@ -166,8 +166,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         );
                       },
-                      child: Row(
-                        children: const [
+                      child: const Row(
+                        children: [
                           Text(
                             'New bie? ',
                             style: TextStyle(
