@@ -48,13 +48,22 @@ class _DeviceScreenState extends State<DeviceScreen> {
         child: const Text('SUBMIT'),
         onPressed: () async {
           print(
-            '${myColor.red} ${myColor.green} ${myColor.blue} $animationInt',
+            '$red $green $blue $animationInt',
           );
 
-          await services.characteristics[0].write(
-            [red, green, blue, animationInt],
-            withoutResponse: false,
-          );
+          List<int> tranData = [red, green, blue, animationInt];
+
+          for (int i = 0; i < tranData.length; i++) {
+            await services.characteristics[0].write(
+              [tranData[i]],
+              withoutResponse: false,
+            );
+          }
+
+          // services.characteristics[0].write(
+          //   [red, green, blue, animationInt],
+          //   withoutResponse: false,
+          // );
         },
       ),
     );
