@@ -374,7 +374,7 @@ class _MyMapScreenState extends State<MyMapScreen> {
   Future<void> _recordingHandler() async {
     // call location api every x milliseconds
     if (isCounting) {
-      Timer.periodic(const Duration(milliseconds: 500), (timer) async {
+      Timer.periodic(const Duration(seconds: 1), (timer) async {
         if (isTracking) {
           Position position = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high,
@@ -382,7 +382,7 @@ class _MyMapScreenState extends State<MyMapScreen> {
           counter++;
 
           setState(() {
-            clockTimer = counter / 2;
+            clockTimer = counter;
           });
 
           myList.add(LatLng(position.latitude, position.longitude));
