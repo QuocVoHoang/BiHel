@@ -60,10 +60,9 @@ class _DeviceScreenState extends State<DeviceScreen> {
             );
           }
 
-          // services.characteristics[0].write(
-          //   [red, green, blue, animationInt],
-          //   withoutResponse: false,
-          // );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('SUBMITTED')),
+          );
         },
       ),
     );
